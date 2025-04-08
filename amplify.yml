@@ -26,4 +26,4 @@ backend:
         - nvm use 20
         - npm install
         - npm install @aws-amplify/backend-cli
-        - npx ampx generate
+        - npx ampx generate outputs
