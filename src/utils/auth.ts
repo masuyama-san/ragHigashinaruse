@@ -1,4 +1,4 @@
-import { fetchAuthSession } from '@aws-amplify/auth';
+import { fetchAuthSession, signOut } from '@aws-amplify/auth';
 
 /**
  * 現在のユーザーが認証済みかどうかを確認します
@@ -10,6 +10,19 @@ export const isAuthenticated = async (): Promise<boolean> => {
         const { tokens } = session;
         const isAuth = !!tokens && !!tokens.idToken;
         return isAuth;
+    } catch {
+        return false;
+    }
+};
+
+/**
+ * ログアウト処理を行います
+ * @returns ログアウトが成功した場合はtrue、それ以外はfalseを返します
+ */
+export const logout = async (): Promise<boolean> => {
+    try {
+        await signOut();
+        return true;
     } catch {
         return false;
     }
