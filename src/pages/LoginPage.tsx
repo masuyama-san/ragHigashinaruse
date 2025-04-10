@@ -26,14 +26,11 @@ const LoginPage: React.FC = () => {
         setLoading(true);
         
         try {
-            console.log('ログイン試行中...');
             const signInResult = await signIn({ username: email, password });
-            console.log('ログイン成功:', JSON.stringify(signInResult, null, 2));
             
             // 新しいパスワードの設定が必要かどうかをチェック
             if (signInResult.nextStep && 
                 signInResult.nextStep.signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
-                console.log('新しいパスワードの設定が必要です');
                 setSignInData(signInResult);
                 setShowNewPasswordForm(true);
                 setLoading(false);
@@ -41,25 +38,15 @@ const LoginPage: React.FC = () => {
             }
             
             // セッションを明示的に取得して確認
-            console.log('セッショントークン取得試行中...');
             const sessionResult = await fetchAuthSession();
-            console.log('セッション取得結果:', JSON.stringify(sessionResult, null, 2));
-            
             const { tokens } = sessionResult;
             
             if (tokens && tokens.idToken) {
-                console.log('認証トークンを取得しました:', tokens.idToken);
-                
-                // トークン情報を出力（機密情報は除外）
-                console.log('トークン有効期限:', tokens.idToken.payload.exp);
-                
                 // 少し遅延させてからリダイレクト（トークンの処理時間を考慮）
                 setTimeout(() => {
-                    console.log('チャットページにリダイレクトします');
                     navigate('/chat', { replace: true });
                 }, 1000); // タイムアウトを1秒に増やす
             } else {
-                console.error('認証トークンが取得できませんでした');
                 setError('認証エラーが発生しました。ページをリロードして再度お試しください。');
                 setLoading(false);
             }
@@ -96,29 +83,21 @@ const LoginPage: React.FC = () => {
                 throw new Error('サインインデータがありません');
             }
             
-            console.log('新しいパスワードを設定中...');
             await confirmSignIn({
                 challengeResponse: newPassword
             });
             
-            console.log('パスワード設定成功、セッショントークン取得試行中...');
             const sessionResult = await fetchAuthSession();
-            console.log('セッション取得結果:', JSON.stringify(sessionResult, null, 2));
-            
             const { tokens } = sessionResult;
             
             if (tokens && tokens.idToken) {
-                console.log('認証トークンを取得しました');
                 setTimeout(() => {
-                    console.log('チャットページにリダイレクトします');
                     navigate('/chat', { replace: true });
                 }, 1000);
             } else {
-                console.error('認証トークンが取得できませんでした');
                 setError('認証エラーが発生しました。ページをリロードして再度お試しください。');
             }
         } catch (err: unknown) {
-            console.error('パスワード設定エラー:', err);
             let errorMessage = '新しいパスワードの設定に失敗しました。';
             
             if (err && typeof err === 'object' && 'message' in err) {

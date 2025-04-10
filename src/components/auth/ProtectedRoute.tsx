@@ -24,8 +24,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             try {
                 const authenticated = await isAuthenticated();
                 setIsAuth(authenticated);
-            } catch (error) {
-                console.error('認証チェック中にエラーが発生しました:', error);
+            } catch {
                 setIsAuth(false);
             } finally {
                 setAuthChecked(true);

@@ -7,7 +7,6 @@ import awsconfig from './aws-exports.ts'
 import { BrowserRouter } from 'react-router-dom'
 
 // Amplify設定を適用
-console.log('Amplify設定を適用:', awsconfig);
 Amplify.configure(awsconfig);
 
 createRoot(document.getElementById('root')!).render(

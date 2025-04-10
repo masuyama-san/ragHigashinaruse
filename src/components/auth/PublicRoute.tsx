@@ -23,12 +23,9 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                console.log('PublicRoute: 認証状態をチェック中...');
                 const authenticated = await isAuthenticated();
-                console.log('PublicRoute: 認証状態:', authenticated);
                 setIsAuth(authenticated);
-            } catch (error) {
-                console.error('PublicRoute: 認証チェックエラー:', error);
+            } catch {
                 setIsAuth(false);
             } finally {
                 setAuthChecked(true);
@@ -49,7 +46,6 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({
 
     // 認証済みユーザーをリダイレクト（オプション）
     if (isAuth && redirectAuthenticated) {
-        console.log('PublicRoute: 認証済みユーザーをリダイレクト:', redirectPath);
         return <Navigate to={redirectPath} replace />;
     }
 
