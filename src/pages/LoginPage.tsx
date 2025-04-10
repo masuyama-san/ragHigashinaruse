@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signIn } from '@aws-amplify/auth';
+import { signIn, fetchAuthSession } from '@aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
@@ -18,8 +18,22 @@ const LoginPage: React.FC = () => {
         try {
             await signIn({ username: email, password });
             console.log('ログイン成功');
-            // ログイン成功後、チャットページにリダイレクト
-            navigate('/chat', { replace: true });
+            
+            // セッションを明示的に取得して確認
+            const { tokens } = await fetchAuthSession();
+            if (tokens && tokens.idToken) {
+                console.log('認証トークンを取得しました');
+                
+                // 少し遅延させてからリダイレクト（トークンの処理時間を考慮）
+                setTimeout(() => {
+                    console.log('チャットページにリダイレクトします');
+                    navigate('/chat', { replace: true });
+                }, 500);
+            } else {
+                console.error('認証トークンが取得できませんでした');
+                setError('認証エラーが発生しました。ページをリロードして再度お試しください。');
+                setLoading(false);
+            }
         } catch (err: unknown) {
             // エラーメッセージのカスタマイズ
             let errorMessage = 'ログインに失敗しました。メールアドレスまたはパスワードを確認してください。';

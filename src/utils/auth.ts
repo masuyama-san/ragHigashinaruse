@@ -6,9 +6,13 @@ import { fetchAuthSession } from '@aws-amplify/auth';
  */
 export const isAuthenticated = async (): Promise<boolean> => {
     try {
+        console.log('認証状態をチェック中...');
         const { tokens } = await fetchAuthSession();
-        return !!tokens && !!tokens.idToken;
-    } catch {
+        const isAuth = !!tokens && !!tokens.idToken;
+        console.log('認証状態:', isAuth, tokens);
+        return isAuth;
+    } catch (error) {
+        console.error('認証チェックエラー:', error);
         return false;
     }
 };

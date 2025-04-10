@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { isAuthenticated } from '../../utils/auth';
 
 interface PublicRouteProps {
@@ -19,19 +19,26 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({
 }) => {
     const [authChecked, setAuthChecked] = useState(false);
     const [isAuth, setIsAuth] = useState(false);
-    const location = useLocation();
 
     useEffect(() => {
         const checkAuth = async () => {
-            const authenticated = await isAuthenticated();
-            setIsAuth(authenticated);
-            setAuthChecked(true);
+            try {
+                console.log('PublicRoute: 認証状態をチェック中...');
+                const authenticated = await isAuthenticated();
+                console.log('PublicRoute: 認証状態:', authenticated);
+                setIsAuth(authenticated);
+            } catch (error) {
+                console.error('PublicRoute: 認証チェックエラー:', error);
+                setIsAuth(false);
+            } finally {
+                setAuthChecked(true);
+            }
         };
         
         checkAuth();
     }, []);
 
-  // 認証チェック中はローディング表示
+    // 認証チェック中はローディング表示
     if (!authChecked) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -40,13 +47,12 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({
         );
     }
 
-  // 認証済みユーザーをリダイレクト（オプション）
+    // 認証済みユーザーをリダイレクト（オプション）
     if (isAuth && redirectAuthenticated) {
-        // ログインページからのリダイレクト先を指定している場合はそこへ
-        const from = location.state?.from?.pathname || redirectPath;
-        return <Navigate to={from} replace />;
+        console.log('PublicRoute: 認証済みユーザーをリダイレクト:', redirectPath);
+        return <Navigate to={redirectPath} replace />;
     }
 
-  // それ以外の場合は子コンポーネントを表示
+    // それ以外の場合は子コンポーネントを表示
     return <>{children}</>;
 }; 

@@ -7,4 +7,14 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  // SPA用のヒストリーAPI fallback
+  preview: {
+    port: 5173,
+    strictPort: true,
+  },
+  server: {
+    port: 5173,
+    strictPort: true,
+    host: true,
+  },
 })
