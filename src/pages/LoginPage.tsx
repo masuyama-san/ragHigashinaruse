@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { signIn } from '@aws-amplify/auth';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -9,10 +9,6 @@ const LoginPage: React.FC = () => {
     const [loading, setLoading] = useState(false);
     
     const navigate = useNavigate();
-    const location = useLocation();
-    
-    // リダイレクト先の取得（デフォルトは/chat）
-    const from = location.state?.from?.pathname || '/chat';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -21,8 +17,9 @@ const LoginPage: React.FC = () => {
         
         try {
             await signIn({ username: email, password });
-            // ログイン成功後、元のページまたはチャットページにリダイレクト
-            navigate(from, { replace: true });
+            console.log('ログイン成功');
+            // ログイン成功後、チャットページにリダイレクト
+            navigate('/chat', { replace: true });
         } catch (err: unknown) {
             // エラーメッセージのカスタマイズ
             let errorMessage = 'ログインに失敗しました。メールアドレスまたはパスワードを確認してください。';
