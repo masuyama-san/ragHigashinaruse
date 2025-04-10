@@ -16,19 +16,28 @@ const LoginPage: React.FC = () => {
         setLoading(true);
         
         try {
-            await signIn({ username: email, password });
-            console.log('ログイン成功');
+            console.log('ログイン試行中...');
+            const signInResult = await signIn({ username: email, password });
+            console.log('ログイン成功:', JSON.stringify(signInResult, null, 2));
             
             // セッションを明示的に取得して確認
-            const { tokens } = await fetchAuthSession();
+            console.log('セッショントークン取得試行中...');
+            const sessionResult = await fetchAuthSession();
+            console.log('セッション取得結果:', JSON.stringify(sessionResult, null, 2));
+            
+            const { tokens } = sessionResult;
+            
             if (tokens && tokens.idToken) {
-                console.log('認証トークンを取得しました');
+                console.log('認証トークンを取得しました:', tokens.idToken);
+                
+                // トークン情報を出力（機密情報は除外）
+                console.log('トークン有効期限:', tokens.idToken.payload.exp);
                 
                 // 少し遅延させてからリダイレクト（トークンの処理時間を考慮）
                 setTimeout(() => {
                     console.log('チャットページにリダイレクトします');
                     navigate('/chat', { replace: true });
-                }, 500);
+                }, 1000); // タイムアウトを1秒に増やす
             } else {
                 console.error('認証トークンが取得できませんでした');
                 setError('認証エラーが発生しました。ページをリロードして再度お試しください。');
