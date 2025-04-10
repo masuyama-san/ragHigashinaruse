@@ -1,8 +1,29 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+import ChatPage from './pages/ChatPage';
+import { PublicRoute } from './components/auth/PublicRoute';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
+
 function App() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <h1 className="text-3xl font-bold text-blue-500">Hello, Tailwind CSS with Vite!</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          } />
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <ChatPage />
+            </ProtectedRoute>
+          } />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
