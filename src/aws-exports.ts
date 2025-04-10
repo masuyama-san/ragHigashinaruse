@@ -1,10 +1,10 @@
-// src/aws-exports.ts
+import aws from '../amplify_outputs.json'
+
 const awsExports = {
-    aws_project_region: "ap-northeast-1",
-    aws_cognito_identity_pool_id: "ap-northeast-1:e7a6ae84-fbd7-4ceb-83ae-2af2ae3c505d",
-    aws_cognito_region: "ap-northeast-1",
-    aws_user_pools_id: "ap-northeast-1_dRKt4yqQV",
-    aws_user_pools_web_client_id: "59rli9r0happdtovo618akjtd0",
+    aws_project_region: aws.auth.aws_region,
+    aws_cognito_region: aws.auth.aws_region,
+    aws_user_pools_id: aws.auth.user_pool_id,
+    aws_user_pools_web_client_id: aws.auth.user_pool_client_id,
 };
 
 export default awsExports;
