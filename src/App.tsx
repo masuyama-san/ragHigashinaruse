@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import ChatPage from './pages/ChatPage';
 import { PublicRoute } from './components/auth/PublicRoute';
@@ -6,24 +6,20 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 function App() {
   return (
-    <BrowserRouter>
       <Routes>
         <Route
-          path="/"
-          element={
+          path="/" element={
             <PublicRoute>
               <LoginPage />
             </PublicRoute>
           } />
         <Route
-          path="/chat"
-          element={
+          path="/chat" element={
             <ProtectedRoute>
               <ChatPage />
             </ProtectedRoute>
           } />
       </Routes>
-    </BrowserRouter>
   );
 }
 
