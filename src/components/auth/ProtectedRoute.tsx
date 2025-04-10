@@ -21,15 +21,21 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
     useEffect(() => {
         const checkAuth = async () => {
-            const authenticated = await isAuthenticated();
-            setIsAuth(authenticated);
-            setAuthChecked(true);
+            try {
+                const authenticated = await isAuthenticated();
+                setIsAuth(authenticated);
+            } catch (error) {
+                console.error('認証チェック中にエラーが発生しました:', error);
+                setIsAuth(false);
+            } finally {
+                setAuthChecked(true);
+            }
         };
         
         checkAuth();
     }, []);
 
-  // 認証チェック中はローディング表示
+    // 認証チェック中はローディング表示
     if (!authChecked) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -38,11 +44,11 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         );
     }
 
-  // 認証されていない場合はリダイレクト
+    // 認証されていない場合はリダイレクト
     if (!isAuth) {
         return <Navigate to={redirectPath} state={{ from: location }} replace />;
     }
 
-  // 認証されている場合は子コンポーネントを表示
+    // 認証されている場合は子コンポーネントを表示
     return <>{children}</>;
 }; 
